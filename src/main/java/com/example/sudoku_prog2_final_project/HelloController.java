@@ -1,5 +1,9 @@
 package com.example.sudoku_prog2_final_project;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
@@ -29,10 +33,12 @@ public class HelloController {
                         tf.setAlignment(Pos.CENTER);
                         block.add(tf, col, row);
 
+                        attachListeners(tf);
                         // Calculate the index in the sudokuFields array
                         int indexRow = blockRow * 3 + row;
                         int indexCol = blockCol * 3 + col;
                         sudokuFields[indexRow][indexCol] = tf; // Store the text field reference in the array
+//                        tf.setOnAction(onTextFieldChange());
                     }
                 }
                 mainGrid.add(block, blockCol, blockRow);
@@ -40,6 +46,31 @@ public class HelloController {
         }
     }
 
+    private void attachListeners(TextField textField) {
+        // Adding a change listener to each TextField
+        textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) { // Allow only digits
+                    textField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+                if (!newValue.isEmpty() && !isValidInput(newValue)) {
+                    textField.setStyle("-fx-text-fill: red;"); // Set text color to red if input is invalid
+                } else {
+                    textField.setStyle("-fx-text-fill: black;"); // Reset text color to black if input is valid
+                }
+            }
+        });
+    }
+
+    private boolean isValidInput(String input) {
+        try {
+            int value = Integer.parseInt(input);
+            return value >= 1 && value <= 9;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
     @FXML
     protected void onImportButtonClick() {
         FileChooser fileChooser = new FileChooser();
