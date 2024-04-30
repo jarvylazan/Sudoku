@@ -13,7 +13,7 @@ public class HelloController {
     @FXML
     private GridPane sudokuGrid; // Ensure this GridPane is properly referenced in your FXML
 
-    private TextField[][] gridFields = new TextField[9][9]; // Array to store text fields for Sudoku grid
+    private final TextField[][] gridFields = new TextField[9][9]; // Array to store text fields for Sudoku grid
 
     public void initialize() {
         // Initialize the grid with text fields
