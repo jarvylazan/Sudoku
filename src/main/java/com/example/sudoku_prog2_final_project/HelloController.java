@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class HelloController {
     @FXML
-    private GridPane mainGrid; // Ensure this GridPane is properly referenced in your FXML
+    private GridPane mainGrid; // Ensure this GridPane is properly referenced inFXML
 
     private TextField[][] sudokuFields = new TextField[9][9]; // Array to store text fields for Sudoku grid
 
@@ -58,13 +58,34 @@ public class HelloController {
             while ((line = reader.readLine()) != null && row < 9) {
                 String[] cells = line.split(",");
                 for (int col = 0; col < cells.length; col++) {
-                    TextField tf = sudokuFields[row][col]; // Directly access the TextField from the array
-                    if (tf != null) tf.setText(cells[col].trim());
+                    TextField tf = sudokuFields[row][col];
+                    if (tf != null) {
+                        String value = cells[col].trim();
+                        tf.setText(value);
+                        if (!value.isEmpty()) {
+                            tf.setEditable(false); // Make the field non-editable only if it's filled
+                        } else {
+                            tf.setEditable(true); // Ensure empty fields are editable
+                            tf.setStyle("-fx-opacity: 1.0;"); // Reset the style for empty cells
+                        }
+                    }
                 }
                 row++;
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    @FXML
+    protected void onClearButtonClick() {
+        for (TextField[] row : sudokuFields) {
+            for (TextField tf : row) {
+                tf.setText(""); // Clear the text
+                tf.setEditable(true); // Make the field editable again
+                tf.setStyle("-fx-opacity: 1.0;"); // Reset any style if needed
+            }
         }
     }
 }
