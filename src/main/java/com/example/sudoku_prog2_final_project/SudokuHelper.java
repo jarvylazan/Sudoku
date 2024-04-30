@@ -4,6 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -13,6 +14,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class SudokuHelper {
+
+    @FXML
+    private Button finishedSetupButton;
     @FXML
     private GridPane mainGrid; // Ensure this GridPane is properly referenced inFXML
 
@@ -79,6 +83,35 @@ public class SudokuHelper {
         }
     }
 
+    @FXML
+    protected void onFinishedSetupButtonClick() {
+//        int row = 0;
+//        for (int col = 0; col < 9; col++) {
+//            TextField tf = sudokuFields[row][col];
+//            if (tf != null) {
+//                String value = cells[col].trim();
+//                tf.setText(value);
+//                if (!value.isEmpty()) {
+//                    tf.setEditable(false);
+//                }
+//            }
+//        }
+//        row++;
+
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                TextField tf = sudokuFields[row][col];
+                if (!tf.getText().trim().isEmpty()) {
+                    tf.setEditable(false);
+                }
+
+                if (sudokuFields[row][col] == sudokuFields[8][8]) {
+                    finishedSetupButton.setVisible(false);
+                }
+            }
+        }
+    }
+
     private void loadSudokuFromFile(java.io.File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -115,10 +148,80 @@ public class SudokuHelper {
                 tf.setStyle("-fx-opacity: 1.0;"); // Reset any style if needed
             }
         }
+        finishedSetupButton.setVisible(true);
     }
 
     @FXML
     protected void  onGetHelpButtonClick() {
-
+        solveSudoku();
     }
+
+    private boolean solveSudoku() {
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                TextField tf = sudokuFields[row][col];
+                if (tf.getText().isEmpty()) {  // Find an empty cell
+                    for (int num = 1; num <= 9; num++) {  // Try possible numbers
+                        if (isValid(row, col, num)) {
+                            tf.setText(String.valueOf(num));  // Place the number
+                            tf.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");  // Color it green
+                            if (solveSudoku()) {  // Recursively continue to solve
+                                return true;
+                            } else {
+                                tf.setText("");  // Backtrack
+                            }
+                        }
+                    }
+                    return false;  // Trigger backtrack
+                }
+            }
+        }
+        return true;  // Puzzle solved
+    }
+
+    private void HelpCell() {
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                TextField tf = sudokuFields[row][col];
+                if (tf.getText().isEmpty()) {  // Find an empty cell
+                    for (int num = 1; num <= 9; num++) {  // Try possible numbers
+                        if (isValid(row, col, num)) {
+                            tf.setText(String.valueOf(num));  // Place the number
+                            tf.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");  // Color it green
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean isValid(int row, int col, int num) {
+        for (int i = 0; i < 9; i++) {
+            // Row check
+            if (!sudokuFields[row][i].getText().isEmpty() &&
+                    Integer.parseInt(sudokuFields[row][i].getText()) == num) {
+                return false;
+            }
+            // Column check
+            if (!sudokuFields[i][col].getText().isEmpty() &&
+                    Integer.parseInt(sudokuFields[i][col].getText()) == num) {
+                return false;
+            }
+        }
+        // Subgrid check
+        int startRow = row / 3 * 3;
+        int startCol = col / 3 * 3;
+        for (int i = startRow; i < startRow + 3; i++) {
+            for (int j = startCol; j < startCol + 3; j++) {
+                if (!sudokuFields[i][j].getText().isEmpty() &&
+                        Integer.parseInt(sudokuFields[i][j].getText()) == num) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    //TODO Create button that validates current input. Display an alert showing if it's right or not
+    //TODO Validate the imported csv file. (Too many commas, too little, etc etc).
 }
