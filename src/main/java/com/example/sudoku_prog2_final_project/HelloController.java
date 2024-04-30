@@ -12,7 +12,9 @@ import java.io.IOException;
 
 public class HelloController {
     @FXML
-    private GridPane mainGrid; // Make sure this matches the fx:id in the FXML file
+    private GridPane mainGrid; // Ensure this GridPane is properly referenced in your FXML
+
+    private TextField[][] sudokuFields = new TextField[9][9]; // Array to store text fields for Sudoku grid
 
     public void initialize() {
         for (int blockRow = 0; blockRow < 3; blockRow++) {
@@ -24,8 +26,13 @@ public class HelloController {
                         TextField tf = new TextField();
                         tf.setPrefWidth(50);
                         tf.setPrefHeight(50);
-                        block.add(tf, col, row);
                         tf.setAlignment(Pos.CENTER);
+                        block.add(tf, col, row);
+
+                        // Calculate the index in the sudokuFields array
+                        int indexRow = blockRow * 3 + row;
+                        int indexCol = blockCol * 3 + col;
+                        sudokuFields[indexRow][indexCol] = tf; // Store the text field reference in the array
                     }
                 }
                 mainGrid.add(block, blockCol, blockRow);
@@ -34,7 +41,7 @@ public class HelloController {
     }
 
     @FXML
-    protected void onLoadButtonClick() {
+    protected void onImportButtonClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Sudoku File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
@@ -51,7 +58,7 @@ public class HelloController {
             while ((line = reader.readLine()) != null && row < 9) {
                 String[] cells = line.split(",");
                 for (int col = 0; col < cells.length; col++) {
-                    TextField tf = getTextFieldAt(row, col);
+                    TextField tf = sudokuFields[row][col]; // Directly access the TextField from the array
                     if (tf != null) tf.setText(cells[col].trim());
                 }
                 row++;
@@ -59,14 +66,5 @@ public class HelloController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private TextField getTextFieldAt(int row, int col) {
-        int blockRow = row / 3;
-        int blockCol = col / 3;
-        int inBlockRow = row % 3;
-        int inBlockCol = col % 3;
-        GridPane block = (GridPane) mainGrid.getChildren().get(blockRow * 3 + blockCol);
-        return (TextField) block.getChildren().get(inBlockRow * 3 + inBlockCol);
     }
 }

@@ -2,16 +2,260 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="com.example.sudoku_prog2_final_project.HelloController">
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="com.example.sudoku_prog2_final_project.HelloController">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
     <!-- Main Sudoku Grid -->
-    <GridPane fx:id="mainGrid" alignment="CENTER">
-        <!-- Blocks will be dynamically added by the controller -->
+    <GridPane fx:id="mainGrid">
+        <!-- Iterate over the blocks in three rows and three columns -->
+        <!-- Row 1 with three blocks -->
+        <GridPane fx:id="block00" style="-fx-border-color: black; -fx-border-width: 2;" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <!-- First block -->
+            <children>
+                <!-- Define each TextField -->
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+        <!-- Block 0,1 -->
+        <GridPane fx:id="block01" style="-fx-border-color: black; -fx-border-width: 2;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <children>
+                <!-- Define each TextField -->
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+        <!-- Block 0,2 -->
+        <GridPane fx:id="block02" style="-fx-border-color: black; -fx-border-width: 2;" GridPane.columnIndex="2" GridPane.rowIndex="0">
+            <children>
+                <!-- Define each TextField -->
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+        <!-- Blocks for Rows 1 and 2 need to be defined in a similar way, adjusting GridPane.rowIndex and columnIndex -->
+        <!-- Row 2 with three blocks -->
+        <!-- Block 1,0 -->
+        <GridPane fx:id="block10" style="-fx-border-color: black; -fx-border-width: 2;" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <children>
+                <!-- Define each TextField for the block -->
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+        <!-- Block 1,1 -->
+        <GridPane fx:id="block11" style="-fx-border-color: black; -fx-border-width: 2;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <children>
+                <!-- Define each TextField for the block -->
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+        <!-- Block 1,2 -->
+        <GridPane fx:id="block12" style="-fx-border-color: black; -fx-border-width: 2;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <children>
+                <!-- Define each TextField for the block -->
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+
+        <!-- Row 3 with three blocks -->
+        <!-- Block 2,0 -->
+        <GridPane fx:id="block20" style="-fx-border-color: black; -fx-border-width: 2;" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <children>
+                <!-- Define each TextField for the block -->
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+        <!-- Block 2,1 -->
+        <GridPane fx:id="block21" style="-fx-border-color: black; -fx-border-width: 2;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <children>
+                <!-- Define each TextField for the block -->
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+        <!-- Block 2,2 -->
+        <GridPane fx:id="block22" style="-fx-border-color: black; -fx-border-width: 2;" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <children>
+                <!-- Define each TextField for the block -->
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField prefHeight="50" prefWidth="50" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+      <columnConstraints>
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
+
     </GridPane>
-    <Button onAction="#onLoadButtonClick" text="Load Sudoku" />
+    <Button onAction="#onImportButtonClick" style="-fx-font-size: 14px;" text="Load Sudoku" />
 </VBox>
