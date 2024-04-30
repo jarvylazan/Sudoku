@@ -2,8 +2,6 @@ package com.example.sudoku_prog2_final_project;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
@@ -14,7 +12,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class HelloController {
+public class SudokuHelper {
     @FXML
     private GridPane mainGrid; // Ensure this GridPane is properly referenced inFXML
 
@@ -38,7 +36,6 @@ public class HelloController {
                         int indexRow = blockRow * 3 + row;
                         int indexCol = blockCol * 3 + col;
                         sudokuFields[indexRow][indexCol] = tf; // Store the text field reference in the array
-//                        tf.setOnAction(onTextFieldChange());
                     }
                 }
                 mainGrid.add(block, blockCol, blockRow);
@@ -118,5 +115,10 @@ public class HelloController {
                 tf.setStyle("-fx-opacity: 1.0;"); // Reset any style if needed
             }
         }
+    }
+
+    @FXML
+    protected void  onGetHelpButtonClick() {
+
     }
 }
