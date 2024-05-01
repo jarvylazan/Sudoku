@@ -224,4 +224,6 @@ public class SudokuHelper {
 
     //TODO Create button that validates current input. Display an alert showing if it's right or not
     //TODO Validate the imported csv file. (Too many commas, too little, etc etc).
+    //TODO Make sure all invalid input is unusable when solving the sudoku.
+    //TODO Invalid board setups crash the program.
 }
