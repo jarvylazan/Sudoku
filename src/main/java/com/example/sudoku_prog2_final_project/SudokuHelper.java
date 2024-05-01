@@ -22,6 +22,7 @@ public class SudokuHelper {
     private TextField[][] sudokuFields = new TextField[9][9]; // Array to store text fields for Sudoku grid
 
     SudokuValidator validate = new SudokuValidator();
+
     public void initialize() {
         for (int blockRow = 0; blockRow < 3; blockRow++) {
             for (int blockCol = 0; blockCol < 3; blockCol++) {
@@ -142,7 +143,6 @@ public class SudokuHelper {
         }
     }
 
-
     @FXML
     protected void onClearButtonClick() {
         for (TextField[] row : sudokuFields) {
@@ -188,6 +188,7 @@ public class SudokuHelper {
         return true;  // Puzzle solved
     }
 
+    // Create a suggestion box for a single cell.
     private void HelpCell() {
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
