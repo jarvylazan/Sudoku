@@ -1,7 +1,5 @@
 package com.example.sudoku_prog2_final_project;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -10,7 +8,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,6 +21,7 @@ public class SudokuHelper {
 
     private TextField[][] sudokuFields = new TextField[9][9]; // Array to store text fields for Sudoku grid
 
+    SudokuValidator validate = new SudokuValidator();
     public void initialize() {
         for (int blockRow = 0; blockRow < 3; blockRow++) {
             for (int blockCol = 0; blockCol < 3; blockCol++) {
@@ -36,8 +34,7 @@ public class SudokuHelper {
                         tf.setPrefHeight(50);
                         tf.setAlignment(Pos.CENTER);
                         block.add(tf, col, row);
-
-                        attachListeners(tf);
+                        validate.attachListeners(tf);
                         // Calculate the index in the sudokuFields array
                         int indexRow = blockRow * 3 + row;
                         int indexCol = blockCol * 3 + col;
@@ -46,32 +43,6 @@ public class SudokuHelper {
                 }
                 mainGrid.add(block, blockCol, blockRow);
             }
-        }
-    }
-
-    private void attachListeners(TextField textField) {
-        // Adding a change listener to each TextField
-        textField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("\\d*")) { // Allow only digits
-                    textField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-                if (!newValue.isEmpty() && !isValidInput(newValue)) {
-                    textField.setStyle("-fx-text-fill: red;"); // Set text color to red if input is invalid
-                } else {
-                    textField.setStyle("-fx-text-fill: black;"); // Reset text color to black if input is valid
-                }
-            }
-        });
-    }
-
-    private boolean isValidInput(String input) {
-        try {
-            int value = Integer.parseInt(input);
-            return value >= 1 && value <= 9;
-        } catch (NumberFormatException e) {
-            return false;
         }
     }
 
@@ -114,12 +85,12 @@ public class SudokuHelper {
         for (int i = 0; i < 9; i++) {
             seen = new boolean[10];  // Index 0 is unused
             for (int j = 0; j < 9; j++) {
-                if (!validateCell(sudokuFields[i][j], seen)) return false;
+                if (!validate.validateCell(sudokuFields[i][j], seen)) return false;
             }
 
             seen = new boolean[10];  // Reset for column check
             for (int j = 0; j < 9; j++) {
-                if (!validateCell(sudokuFields[j][i], seen)) return false;
+                if (!validate.validateCell(sudokuFields[j][i], seen)) return false;
             }
         }
 
@@ -132,7 +103,7 @@ public class SudokuHelper {
                         int x = blockRow * 3 + row;
                         int y = blockCol * 3 + col;
                         try {
-                            if (!validateCell(sudokuFields[x][y], seen))
+                            if (!validate.validateCell(sudokuFields[x][y], seen))
                                 return false;
                         } catch (NumberFormatException e) {
                             Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
@@ -143,22 +114,6 @@ public class SudokuHelper {
             }
         }
         return true; // The board is valid
-    }
-
-    private boolean validateCell(TextField cell, boolean[] seen) {
-        if (!cell.getText().isEmpty()) {
-            try {
-                int num = Integer.parseInt(cell.getText());
-                if (num < 1 || num > 9 || seen[num]) {
-                    return false;  // Invalid number or duplicate
-                }
-                seen[num] = true;
-            } catch (NumberFormatException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
-                alert.showAndWait();
-            }
-        }
-        return true;
     }
 
     private void loadSudokuFromFile(java.io.File file) {
