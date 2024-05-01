@@ -4,11 +4,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -72,6 +74,7 @@ public class SudokuHelper {
             return false;
         }
     }
+
     @FXML
     protected void onImportButtonClick() {
         FileChooser fileChooser = new FileChooser();
@@ -85,31 +88,77 @@ public class SudokuHelper {
 
     @FXML
     protected void onFinishedSetupButtonClick() {
-//        int row = 0;
-//        for (int col = 0; col < 9; col++) {
-//            TextField tf = sudokuFields[row][col];
-//            if (tf != null) {
-//                String value = cells[col].trim();
-//                tf.setText(value);
-//                if (!value.isEmpty()) {
-//                    tf.setEditable(false);
-//                }
-//            }
-//        }
-//        row++;
+        if (validateBoard()) {
+            for (int row = 0; row < 9; row++) {
+                for (int col = 0; col < 9; col++) {
+                    TextField tf = sudokuFields[row][col];
+                    if (!tf.getText().trim().isEmpty()) {
+                        tf.setEditable(false);
+                    }
 
-        for (int row = 0; row < 9; row++) {
-            for (int col = 0; col < 9; col++) {
-                TextField tf = sudokuFields[row][col];
-                if (!tf.getText().trim().isEmpty()) {
-                    tf.setEditable(false);
+                    if (sudokuFields[row][col] == sudokuFields[8][8]) {
+                        finishedSetupButton.setVisible(false);
+                    }
                 }
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
+            alert.showAndWait();
+        }
+    }
 
-                if (sudokuFields[row][col] == sudokuFields[8][8]) {
-                    finishedSetupButton.setVisible(false);
+
+    private boolean validateBoard() {
+        boolean[] seen;
+        // Check rows and columns
+        for (int i = 0; i < 9; i++) {
+            seen = new boolean[10];  // Index 0 is unused
+            for (int j = 0; j < 9; j++) {
+                if (!validateCell(sudokuFields[i][j], seen)) return false;
+            }
+
+            seen = new boolean[10];  // Reset for column check
+            for (int j = 0; j < 9; j++) {
+                if (!validateCell(sudokuFields[j][i], seen)) return false;
+            }
+        }
+
+        // Check 3x3 subgrids
+        for (int blockRow = 0; blockRow < 3; blockRow++) {
+            for (int blockCol = 0; blockCol < 3; blockCol++) {
+                seen = new boolean[10];
+                for (int row = 0; row < 3; row++) {
+                    for (int col = 0; col < 3; col++) {
+                        int x = blockRow * 3 + row;
+                        int y = blockCol * 3 + col;
+                        try {
+                            if (!validateCell(sudokuFields[x][y], seen))
+                                return false;
+                        } catch (NumberFormatException e) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
+                            alert.showAndWait();
+                        }
+                    }
                 }
             }
         }
+        return true; // The board is valid
+    }
+
+    private boolean validateCell(TextField cell, boolean[] seen) {
+        if (!cell.getText().isEmpty()) {
+            try {
+                int num = Integer.parseInt(cell.getText());
+                if (num < 1 || num > 9 || seen[num]) {
+                    return false;  // Invalid number or duplicate
+                }
+                seen[num] = true;
+            } catch (NumberFormatException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
+                alert.showAndWait();
+            }
+        }
+        return true;
     }
 
     private void loadSudokuFromFile(java.io.File file) {
@@ -152,8 +201,13 @@ public class SudokuHelper {
     }
 
     @FXML
-    protected void  onGetHelpButtonClick() {
-        solveSudoku();
+    protected void onGetHelpButtonClick() {
+        if (validateBoard()) {
+            solveSudoku();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
+            alert.showAndWait();
+        }
     }
 
     private boolean solveSudoku() {
@@ -224,6 +278,4 @@ public class SudokuHelper {
 
     //TODO Create button that validates current input. Display an alert showing if it's right or not
     //TODO Validate the imported csv file. (Too many commas, too little, etc etc).
-    //TODO Make sure all invalid input is unusable when solving the sudoku.
-    //TODO Invalid board setups crash the program.
 }
