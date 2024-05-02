@@ -74,7 +74,8 @@ public class SudokuHelper {
                 }
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "This is not a valid input for the Sudoku table setup.\n" +
+                    "Please use integers from 1 to 9.");
             alert.showAndWait();
         }
     }
@@ -95,7 +96,7 @@ public class SudokuHelper {
             }
         }
 
-        // Check 3x3 subgrids
+        // Check 3x3 sub-grids
         for (int blockRow = 0; blockRow < 3; blockRow++) {
             for (int blockCol = 0; blockCol < 3; blockCol++) {
                 seen = new boolean[10];
@@ -160,7 +161,8 @@ public class SudokuHelper {
         if (validateBoard()) {
             solveSudoku();
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "There is invalid input in the Sudoku table.\n" +
+                    "Please refrain from using anything other than integers ranging from 1 to 9.");
             alert.showAndWait();
         }
     }
@@ -189,6 +191,7 @@ public class SudokuHelper {
     }
 
     // Create a suggestion box for a single cell.
+    @FXML
     private void HelpCell() {
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
