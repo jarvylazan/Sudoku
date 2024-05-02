@@ -1,5 +1,7 @@
 package com.example.sudoku_prog2_final_project;
 
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -7,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -190,9 +193,10 @@ public class SudokuHelper {
         return true;  // Puzzle solved
     }
 
+
     // Create a suggestion box for a single cell.
     @FXML
-    private void HelpCell() {
+    private boolean HelpCell() {
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
                 TextField tf = sudokuFields[row][col];
@@ -200,12 +204,21 @@ public class SudokuHelper {
                     for (int num = 1; num <= 9; num++) {  // Try possible numbers
                         if (isValid(row, col, num)) {
                             tf.setText(String.valueOf(num));  // Place the number
-                            tf.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");  // Color it green
+//                            tf.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");  // Color it green
+                            if (solveSudoku()) {
+                                return true;
+                            } else {
+                                tf.setAlignment(Pos.TOP_LEFT);
+                                tf.setFont(Font.font("-fx-text-fill: green; -fx-font-weight: bold;", 5));
+                                tf.textProperty().bind(Bindings.concat(tf.textProperty(), String.valueOf(num)));
+                            }
                         }
                     }
+                    return false;  // Trigger backtrack
                 }
             }
         }
+        return true;  // Puzzle solved
     }
 
     private boolean isValid(int row, int col, int num) {
