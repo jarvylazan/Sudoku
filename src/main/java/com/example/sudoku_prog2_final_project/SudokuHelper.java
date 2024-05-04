@@ -148,13 +148,12 @@ public class SudokuHelper {
                         }
                     }
                 }
-                else {
-                    onClearButtonClick();
+                else
                     break;
-                }
             }
             if (rowCount != 9 || !valid) {
                 // Incorrect number of rows or invalid row length
+                onClearButtonClick();
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Your imported csv file is wrong.");
                 alert.showAndWait();
             }
