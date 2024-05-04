@@ -122,29 +122,47 @@ public class SudokuHelper {
 
     private void loadSudokuFromFile(java.io.File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            int rowCount = 0;
+            boolean valid = true; // Flag to track overall validity
             String line;
-            int row = 0;
-            while ((line = reader.readLine()) != null && row < 9) {
+            while ((line = reader.readLine()) != null) {
                 String[] cells = line.split(",");
-                for (int col = 0; col < cells.length; col++) {
-                    TextField tf = sudokuFields[row][col];
-                    if (tf != null) {
-                        String value = cells[col].trim();
-                        tf.setText(value);
-                        if (!value.isEmpty()) {
-                            tf.setEditable(false); // Make the field non-editable only if it's filled
-                        } else {
-                            tf.setEditable(true); // Ensure empty fields are editable
-                            tf.setStyle("-fx-opacity: 1.0;"); // Reset the style for empty cells
+                if (cells.length != 9) {
+                    // Row doesn't have exactly 9 inputs
+                    valid = false;
+                    break; // Exit loop immediately
+                }
+                rowCount++;
+                if (rowCount <= 9) {
+                    for (int col = 0; col < cells.length; col++) {
+                        TextField tf = sudokuFields[rowCount - 1][col];
+                        if (tf != null) {
+                            String value = cells[col].trim();
+                            tf.setText(value);
+                            if (!value.isEmpty()) {
+                                tf.setEditable(false); // Make the field non-editable only if it's filled
+                            } else {
+                                tf.setEditable(true); // Ensure empty fields are editable
+                                tf.setStyle("-fx-opacity: 1.0;"); // Reset the style for empty cells
+                            }
                         }
                     }
                 }
-                row++;
+                else {
+                    onClearButtonClick();
+                    break;
+                }
+            }
+            if (rowCount != 9 || !valid) {
+                // Incorrect number of rows or invalid row length
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Your imported csv file is wrong.");
+                alert.showAndWait();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     @FXML
     protected void onClearButtonClick() {
