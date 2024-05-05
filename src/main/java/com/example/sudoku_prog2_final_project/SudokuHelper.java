@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -64,39 +65,40 @@ public class SudokuHelper {
 
     @FXML
     protected void onFinishedSetupButtonClick() {
-        if (validateBoard()) {
-            for (int row = 0; row < 9; row++) {
-                for (int col = 0; col < 9; col++) {
-                    TextField tf = sudokuFields[row][col];
-                    if (!tf.getText().trim().isEmpty()) {
-                        tf.setEditable(false);
-                    }
-
-                    if (sudokuFields[row][col] == sudokuFields[8][8]) {
-                        finishedSetupButton.setVisible(false);
-                    }
+        validateBoard();
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                TextField tf = sudokuFields[row][col];
+                if (!tf.getText().trim().isEmpty()) {
+                    tf.setEditable(false);
                 }
             }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "This is not a valid input for the Sudoku table setup.\n" +
-                    "Please use integers from 1 to 9.");
-            alert.showAndWait();
         }
     }
 
 
-    private boolean validateBoard() {
+    private void validateBoard() {
         boolean[] seen;
+        boolean valid = true;
+        Alert alert = new Alert(Alert.AlertType.ERROR, "This is not a valid input for the Sudoku table setup.\n" +
+                "Please use integers from 1 to 9.");
+
         // Check rows and columns
         for (int i = 0; i < 9; i++) {
             seen = new boolean[10];  // Index 0 is unused
             for (int j = 0; j < 9; j++) {
-                if (!validate.validateCell(sudokuFields[i][j], seen)) return false;
+                if (!validate.validateCell(sudokuFields[i][j], seen)) {
+                    valid = false;
+                    FormatInvalidCell(j,i);
+                }
             }
 
             seen = new boolean[10];  // Reset for column check
             for (int j = 0; j < 9; j++) {
-                if (!validate.validateCell(sudokuFields[j][i], seen)) return false;
+                if (!validate.validateCell(sudokuFields[j][i], seen)) {
+                    valid = false;
+                    FormatInvalidCell(j,i);
+                }
             }
         }
 
@@ -109,59 +111,88 @@ public class SudokuHelper {
                         int x = blockRow * 3 + row;
                         int y = blockCol * 3 + col;
                         try {
-                            if (!validate.validateCell(sudokuFields[x][y], seen))
-                                return false;
+                            if (!validate.validateCell(sudokuFields[x][y], seen)) {
+                                valid = false;
+                                FormatInvalidCell(x,y);
+                            }
                         } catch (NumberFormatException e) {
-                            Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
-                            alert.showAndWait();
+                            valid = false;
+                            FormatInvalidCell(x,y);
                         }
                     }
                 }
             }
         }
-        return true; // The board is valid
+        if (!valid) {
+            alert.showAndWait();
+        }
+    }
+
+    private void FormatInvalidCell(int x, int y) {
+        sudokuFields[x][y].setEditable(true);
+        sudokuFields[x][y].setStyle("-fx-text-fill: red;");
     }
 
     private void loadSudokuFromFile(java.io.File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            int rowCount = 0;
             boolean valid = true; // Flag to track overall validity
+            int rowCount = 0;
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] cells = line.split(",");
                 if (cells.length != 9) {
-                    // Row doesn't have exactly 9 inputs
                     valid = false;
                     break; // Exit loop immediately
                 }
                 rowCount++;
-                if (rowCount <= 9) {
-                    for (int col = 0; col < cells.length; col++) {
-                        TextField tf = sudokuFields[rowCount - 1][col];
-                        if (tf != null) {
-                            String value = cells[col].trim();
-                            tf.setText(value);
-                            if (!value.isEmpty()) {
-                                tf.setEditable(false); // Make the field non-editable only if it's filled
-                            } else {
-                                tf.setEditable(true); // Ensure empty fields are editable
-                                tf.setStyle("-fx-opacity: 1.0;"); // Reset the style for empty cells
+                if (rowCount > 9) {
+                    valid = false;
+                    break;
+                }
+                if (!validateRow(cells)) {
+                    valid = false;
+                    break;
+                }
+                for (int col = 0; col < cells.length; col++) {
+                    TextField tf = sudokuFields[rowCount - 1][col];
+                    if (tf != null) {
+                        String value = cells[col].trim();
+                        if (!value.isEmpty()) {
+                            if (!value.matches("[1-9]")) { // Check if the value is not a digit from 1 to 9
+                                valid = false;
+                                break;
                             }
+                            tf.setText(value);
+                            tf.setEditable(false); // Make the field non-editable only if it's filled
+                        } else {
+                            tf.setEditable(true); // Ensure empty fields are editable
+                            tf.setStyle("-fx-opacity: 1.0;"); // Reset the style for empty cells
                         }
                     }
                 }
-                else
+                if (!valid) {
                     break;
+                }
             }
-            if (rowCount != 9 || !valid) {
+            if (!valid || rowCount != 9) {
                 // Incorrect number of rows or invalid row length
                 onClearButtonClick();
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Your imported csv file is wrong.");
                 alert.showAndWait();
             }
+            validateBoard();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean validateRow(String[] cells) {
+        for (String cell : cells) {
+            if (!cell.trim().isEmpty() && !cell.matches("[1-9]")) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
@@ -179,13 +210,8 @@ public class SudokuHelper {
 
     @FXML
     protected void onGetHelpButtonClick() {
-        if (validateBoard()) {
-            solveSudoku();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "There is invalid input in the Sudoku table.\n" +
-                    "Please refrain from using anything other than integers ranging from 1 to 9.");
-            alert.showAndWait();
-        }
+        validateBoard();
+        solveSudoku();
     }
 
     private boolean solveSudoku() {
@@ -267,6 +293,5 @@ public class SudokuHelper {
         return true;
     }
 
-    //TODO Create button that validates current input. Display an alert showing if it's right or not
     //TODO Validate the imported csv file. (Too many commas, too little, etc etc).
 }

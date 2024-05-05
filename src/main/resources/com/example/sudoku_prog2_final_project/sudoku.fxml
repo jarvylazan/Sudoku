@@ -16,7 +16,7 @@
     </GridPane>
    <HBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0">
       <children>
-         <Button fx:id="finishedSetupButton" mnemonicParsing="false" onAction="#onFinishedSetupButtonClick" text="Finished Setup" />
+         <Button fx:id="finishedSetupButton" mnemonicParsing="false" onAction="#onFinishedSetupButtonClick" text="Set as Initial" />
           <Button onAction="#onImportButtonClick" text="Load Sudoku">
             <HBox.margin>
                <Insets left="25.0" />

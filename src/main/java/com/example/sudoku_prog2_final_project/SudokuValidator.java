@@ -42,8 +42,7 @@ public class SudokuValidator {
                 }
                 seen[num] = true;
             } catch (NumberFormatException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
-                alert.showAndWait();
+                return false;
             }
         }
         return true;
