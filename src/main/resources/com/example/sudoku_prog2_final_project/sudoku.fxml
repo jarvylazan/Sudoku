@@ -31,7 +31,7 @@
                <Insets left="25.0" right="25.0" />
             </HBox.margin>
          </Button>
-         <Button mnemonicParsing="false" onAction="#HelpCell" text="Get Help!" />
+         <Button mnemonicParsing="false" onAction="#GetSuggestions" text="Get Help!" />
       </children>
    </HBox>
 </VBox>
