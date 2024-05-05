@@ -1,7 +1,5 @@
 package com.example.sudoku_prog2_final_project;
 
-import javafx.beans.binding.Binding;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -14,6 +12,9 @@ import javafx.stage.FileChooser;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SudokuHelper {
 
@@ -77,7 +78,8 @@ public class SudokuHelper {
                 }
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "This is not a valid input for the Sudoku table setup.\n" +
+                    "Please use integers from 1 to 9.");
             alert.showAndWait();
         }
     }
@@ -98,7 +100,7 @@ public class SudokuHelper {
             }
         }
 
-        // Check 3x3 subgrids
+        // Check 3x3 sub-grids
         for (int blockRow = 0; blockRow < 3; blockRow++) {
             for (int blockCol = 0; blockCol < 3; blockCol++) {
                 seen = new boolean[10];
@@ -180,7 +182,8 @@ public class SudokuHelper {
         if (validateBoard()) {
             solveSudoku();
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Wrong.");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "There is invalid input in the Sudoku table.\n" +
+                    "Please refrain from using anything other than integers ranging from 1 to 9.");
             alert.showAndWait();
         }
     }
@@ -210,29 +213,31 @@ public class SudokuHelper {
 
 
     // Create a suggestion box for a single cell.
-    private boolean HelpCell() {
+    @FXML
+    private void GetSuggestions() {
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
                 TextField tf = sudokuFields[row][col];
-                if (tf.getText().isEmpty()) {  // Find an empty cell
-                    for (int num = 1; num <= 9; num++) {  // Try possible numbers
+                if (tf.getText().isEmpty()) {  // Only update if the cell is empty
+                    List<Integer> possibleNumbers = new ArrayList<>();
+                    for (int num = 1; num <= 9; num++) {
                         if (isValid(row, col, num)) {
-                            tf.setText(String.valueOf(num));  // Place the number
-//                            tf.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");  // Color it green
-                            if (solveSudoku()) {
-                                return true;
-                            } else {
-                                tf.setAlignment(Pos.TOP_LEFT);
-                                tf.setFont(Font.font("-fx-text-fill: green; -fx-font-weight: bold;", 5));
-                                tf.textProperty().bind(Bindings.concat(tf.textProperty(), String.valueOf(num)));
-                            }
+                            possibleNumbers.add(num);
                         }
                     }
-                    return false;  // Trigger backtrack
+                    // Format and display suggestions without commas
+                    if (!possibleNumbers.isEmpty()) {
+                        String suggestion = possibleNumbers.stream()
+                                .map(String::valueOf)
+                                .collect(Collectors.joining());  // No separator used
+                        tf.setText(suggestion);
+                        tf.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+                        tf.setFont(Font.font("-fx-text-fill: green; -fx-font-weight: bold;", 10));
+                        tf.setAlignment(Pos.TOP_LEFT);
+                    }
                 }
             }
         }
-        return true;  // Puzzle solved
     }
 
     private boolean isValid(int row, int col, int num) {
