@@ -45,4 +45,13 @@ public class SudokuValidator {
         }
         return true;
     }
+
+    public boolean validateRow(String[] cells) {
+        for (String cell : cells) {
+            if (!cell.trim().isEmpty() && !cell.matches("[1-9]")) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

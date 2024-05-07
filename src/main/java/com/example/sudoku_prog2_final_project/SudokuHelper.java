@@ -9,26 +9,24 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SudokuHelper {
 
+    // Init button, grid and 2d array of text fields, as well as the sudoku validator class.
     @FXML
     private Button finishedSetupButton;
     @FXML
-    private GridPane mainGrid; // Ensure this GridPane is properly referenced inFXML
-
-    private TextField[][] sudokuFields = new TextField[9][9]; // Array to store text fields for Sudoku grid
-
+    private GridPane mainGrid;
+    private final TextField[][] sudokuFields = new TextField[9][9];
     SudokuValidator validate = new SudokuValidator();
 
+    // This method initializes the program by inserting text fields into individual blocks in the mainGrid.
     public void initialize() {
         for (int blockRow = 0; blockRow < 3; blockRow++) {
             for (int blockCol = 0; blockCol < 3; blockCol++) {
@@ -53,6 +51,7 @@ public class SudokuHelper {
         }
     }
 
+    // Assigned method to import csv sudoku file.
     @FXML
     protected void onImportButtonClick() {
         FileChooser fileChooser = new FileChooser();
@@ -64,6 +63,7 @@ public class SudokuHelper {
         }
     }
 
+    // Makes the filled text fields un-editable
     @FXML
     protected void onFinishedSetupButtonClick() {
         try {
@@ -82,7 +82,7 @@ public class SudokuHelper {
         }
     }
 
-
+    // Void method that validates the current state of the board and throws specific exception messages based on the type of error in the board
     private void validateBoard() {
         boolean[] seen;
 
@@ -127,11 +127,13 @@ public class SudokuHelper {
         }
     }
 
+    // This method is called to format the invalid texts.
     private void FormatInvalidCell(int x, int y) {
         sudokuFields[x][y].setEditable(true);
         sudokuFields[x][y].setStyle("-fx-text-fill: red;");
     }
 
+    // Method to import the csv sudoku file.
     private void loadSudokuFromFile(java.io.File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             int rowCount = 0;
@@ -145,7 +147,7 @@ public class SudokuHelper {
                 if (rowCount > 9) {
                     throw new InvalidFileFormatException("The file has more than 9 rows.");
                 }
-                if (!validateRow(cells)) {
+                if (!validate.validateRow(cells)) {
                     throw new InvalidFileFormatException("The file contains invalid input.");
                 }
                 try {
@@ -165,7 +167,7 @@ public class SudokuHelper {
                             }
                         }
                     }
-                } catch (NumberFormatException ex) {
+                } catch (NumberFormatException ex) { // Catch error if value is invalid.
                     Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
                     alert.showAndWait();
                 }
@@ -174,26 +176,16 @@ public class SudokuHelper {
                 throw new InvalidFileFormatException("The file does not have exactly 9 rows.");
             }
             validateBoard();
-        } catch (InvalidFileFormatException ex) {
+        } catch (InvalidFileFormatException ex) { // Catch error if file format is invalid (less/more than 9 rows)
             onClearButtonClick();
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
             alert.showAndWait();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException ex) { // Catch error if importing file fails
+            throw new RuntimeException(ex);
         }
     }
 
-
-    private boolean validateRow(String[] cells) {
-        for (String cell : cells) {
-            if (!cell.trim().isEmpty() && !cell.matches("[1-9]")) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
+    // Clear the entire board
     @FXML
     protected void onClearButtonClick() {
         for (TextField[] row : sudokuFields) {
@@ -206,8 +198,9 @@ public class SudokuHelper {
         finishedSetupButton.setVisible(true);
     }
 
+    // Method to solve the entire board.
     @FXML
-    protected void onGetHelpButtonClick() {
+    protected void onSolveBoardButtonClick() {
         try {
             validateBoard();
         } catch (NumberFormatException ex) {
@@ -217,6 +210,7 @@ public class SudokuHelper {
         solveSudoku();
     }
 
+    // Solve the entire sudoku board.
     private boolean solveSudoku() {
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
@@ -241,7 +235,7 @@ public class SudokuHelper {
     }
 
 
-    // Create a suggestion box for a single cell.
+    // Create a suggestion box for the entire board.
     @FXML
     private void GetSuggestions() {
         for (int row = 0; row < 9; row++) {
@@ -269,6 +263,7 @@ public class SudokuHelper {
         }
     }
 
+    // Compared to the ValidateBoard() method, this method is used by the SolveSudoku() method to verify its solutions.
     private boolean isValid(int row, int col, int num) {
         for (int i = 0; i < 9; i++) {
             // Row check
@@ -296,7 +291,7 @@ public class SudokuHelper {
         return true;
     }
 
-    private class InvalidFileFormatException extends Throwable {
+    private static class InvalidFileFormatException extends Throwable {
         public InvalidFileFormatException(String s) {
             super(s);
         }

@@ -21,7 +21,7 @@
             <HBox.margin>
                <Insets left="25.0" />
             </HBox.margin></Button>
-         <Button mnemonicParsing="false" onAction="#onGetHelpButtonClick" text="Solve Sudoku">
+         <Button mnemonicParsing="false" onAction="#onSolveBoardButtonClick" text="Solve Sudoku">
             <HBox.margin>
                <Insets left="25.0" />
             </HBox.margin>
