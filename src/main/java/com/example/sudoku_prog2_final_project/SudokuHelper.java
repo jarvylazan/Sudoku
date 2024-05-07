@@ -91,21 +91,17 @@ public class SudokuHelper {
             seen = new boolean[10];  // Index 0 is unused
             for (int j = 0; j < 9; j++) {
                 if (!validate.validateCell(sudokuFields[i][j], seen)) {
-                    FormatInvalidCell(j,i);
-                    throw new NumberFormatException("Exception 1");
+                    FormatInvalidCell(j, i);
+                    throw new NumberFormatException("There is either an error or a duplicate in your rows. Please correct.");
                 }
             }
-            System.out.println();
-            System.out.println("1" + Arrays.toString(seen));
             seen = new boolean[10];  // Reset for column check
             for (int j = 0; j < 9; j++) {
                 if (!validate.validateCell(sudokuFields[j][i], seen)) {
-                    FormatInvalidCell(j,i);
-                    throw new NumberFormatException("Exception 2");
+                    FormatInvalidCell(j, i);
+                    throw new NumberFormatException("There is an error or a duplicate in your rows. Please correct.");
                 }
             }
-            System.out.println();
-            System.out.println("2" + Arrays.toString(seen));
         }
 
         // Check 3x3 sub-grids
@@ -118,17 +114,15 @@ public class SudokuHelper {
                         int y = blockCol * 3 + col;
                         try {
                             if (!validate.validateCell(sudokuFields[x][y], seen)) {
-                                FormatInvalidCell(x,y);
-                                throw new NumberFormatException("Exception 3");
+                                FormatInvalidCell(x, y);
+                                throw new NumberFormatException("One of your sub-grids has an error or a duplicate. Please correct.");
                             }
                         } catch (NumberFormatException e) {
-                            FormatInvalidCell(x,y);
-                            throw new NumberFormatException("Exception 4");
+                            FormatInvalidCell(x, y);
+                            throw new NumberFormatException("There is invalid input in one of your sub-grids. Please correct.");
                         }
                     }
                 }
-                System.out.println();
-                System.out.println("3" + Arrays.toString(seen));
             }
         }
     }
@@ -140,56 +134,55 @@ public class SudokuHelper {
 
     private void loadSudokuFromFile(java.io.File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            boolean valid = true; // Flag to track overall validity
             int rowCount = 0;
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] cells = line.split(",");
                 if (cells.length != 9) {
-                    valid = false;
-                    break; // Exit loop immediately
+                    throw new InvalidFileFormatException("The file does not have exactly 9 inputs per row.");
                 }
                 rowCount++;
                 if (rowCount > 9) {
-                    valid = false;
-                    break;
+                    throw new InvalidFileFormatException("The file has more than 9 rows.");
                 }
                 if (!validateRow(cells)) {
-                    valid = false;
-                    break;
+                    throw new InvalidFileFormatException("The file contains invalid input.");
                 }
-                for (int col = 0; col < cells.length; col++) {
-                    TextField tf = sudokuFields[rowCount - 1][col];
-                    if (tf != null) {
-                        String value = cells[col].trim();
-                        if (!value.isEmpty()) {
-                            if (!value.matches("[1-9]")) { // Check if the value is not a digit from 1 to 9
-                                valid = false;
-                                break;
+                try {
+                    for (int col = 0; col < cells.length; col++) {
+                        TextField tf = sudokuFields[rowCount - 1][col];
+                        if (tf != null) {
+                            String value = cells[col].trim();
+                            if (!value.isEmpty()) {
+                                if (!value.matches("[1-9]")) { // Check if the value is not a digit from 1 to 9
+                                    throw new NumberFormatException("Invalid input detected in the file.");
+                                }
+                                tf.setText(value);
+                                tf.setEditable(false); // Make the field non-editable only if it's filled
+                            } else {
+                                tf.setEditable(true); // Ensure empty fields are editable
+                                tf.setStyle("-fx-opacity: 1.0;"); // Reset the style for empty cells
                             }
-                            tf.setText(value);
-                            tf.setEditable(false); // Make the field non-editable only if it's filled
-                        } else {
-                            tf.setEditable(true); // Ensure empty fields are editable
-                            tf.setStyle("-fx-opacity: 1.0;"); // Reset the style for empty cells
                         }
                     }
-                }
-                if (!valid) {
-                    break;
+                } catch (NumberFormatException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
+                    alert.showAndWait();
                 }
             }
-            if (!valid || rowCount != 9) {
-                // Incorrect number of rows or invalid row length
-                onClearButtonClick();
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Your imported csv file is wrong.");
-                alert.showAndWait();
+            if (rowCount != 9) {
+                throw new InvalidFileFormatException("The file does not have exactly 9 rows.");
             }
             validateBoard();
+        } catch (InvalidFileFormatException ex) {
+            onClearButtonClick();
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
+            alert.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
+
 
     private boolean validateRow(String[] cells) {
         for (String cell : cells) {
@@ -301,6 +294,12 @@ public class SudokuHelper {
             }
         }
         return true;
+    }
+
+    private class InvalidFileFormatException extends Throwable {
+        public InvalidFileFormatException(String s) {
+            super(s);
+        }
     }
 
     //TODO Validate the imported csv file. (Too many commas, too little, etc etc).
