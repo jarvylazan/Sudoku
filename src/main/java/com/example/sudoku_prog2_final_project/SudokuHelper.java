@@ -291,11 +291,10 @@ public class SudokuHelper {
         return true;
     }
 
+    // Define custom exception class for invalid file format
     private static class InvalidFileFormatException extends Throwable {
         public InvalidFileFormatException(String s) {
             super(s);
         }
     }
-
-    //TODO Validate the imported csv file. (Too many commas, too little, etc etc).
 }
