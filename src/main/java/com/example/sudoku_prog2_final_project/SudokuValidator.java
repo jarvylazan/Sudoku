@@ -1,25 +1,23 @@
 package com.example.sudoku_prog2_final_project;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Alert;
+import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Font;
 
 public class SudokuValidator {
 
     public void attachListeners(TextField textField) {
         // Adding a change listener to each TextField
-        textField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("\\d*")) { // Allow only digits
-                    textField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-                if (!newValue.isEmpty() && !isValidInput(newValue)) {
-                    textField.setStyle("-fx-text-fill: red;"); // Set text color to red if input is invalid
-                } else {
-                    textField.setStyle("-fx-text-fill: black;"); // Reset text color to black if input is valid
-                }
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) { // Allow only digits
+                textField.setText(newValue.replaceAll("\\D", ""));
+            }
+            if (!newValue.isEmpty() && !isValidInput(newValue)) {
+                textField.setStyle("-fx-text-fill: red;"); // Set text color to red if input is invalid
+            } else {
+                textField.setStyle("-fx-text-fill: black;"); // Reset text color to black if input is valid
+                textField.setAlignment(Pos.CENTER);
+                textField.setFont(Font.font("-fx-text-fill: black;", 12));
             }
         });
     }
