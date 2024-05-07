@@ -6,6 +6,7 @@ import javafx.scene.text.Font;
 
 public class SudokuValidator {
 
+    // Actively formats the text in each textfield should it change to invalid.
     public void attachListeners(TextField textField) {
         // Adding a change listener to each TextField
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -22,6 +23,7 @@ public class SudokuValidator {
         });
     }
 
+    // Private Helper method to check if the input is valid.
     private boolean isValidInput(String input) {
         try {
             int value = Integer.parseInt(input);
@@ -31,6 +33,7 @@ public class SudokuValidator {
         }
     }
 
+    // Check a cell if it's a valid input.
     public boolean validateCell(TextField cell, boolean[] seen) {
         if (!cell.getText().isEmpty()) {
             try {
@@ -46,6 +49,7 @@ public class SudokuValidator {
         return true;
     }
 
+    // Check if a row is valid.
     public boolean validateRow(String[] cells) {
         for (String cell : cells) {
             if (!cell.trim().isEmpty() && !cell.matches("[1-9]")) {
