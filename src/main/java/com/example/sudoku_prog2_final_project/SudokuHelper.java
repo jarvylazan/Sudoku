@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,7 +66,12 @@ public class SudokuHelper {
 
     @FXML
     protected void onFinishedSetupButtonClick() {
-        validateBoard();
+        try {
+            validateBoard();
+        } catch (NumberFormatException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
+            alert.showAndWait();
+        }
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
                 TextField tf = sudokuFields[row][col];
@@ -79,27 +85,27 @@ public class SudokuHelper {
 
     private void validateBoard() {
         boolean[] seen;
-        boolean valid = true;
-        Alert alert = new Alert(Alert.AlertType.ERROR, "This is not a valid input for the Sudoku table setup.\n" +
-                "Please use integers from 1 to 9.");
 
         // Check rows and columns
         for (int i = 0; i < 9; i++) {
             seen = new boolean[10];  // Index 0 is unused
             for (int j = 0; j < 9; j++) {
                 if (!validate.validateCell(sudokuFields[i][j], seen)) {
-                    valid = false;
                     FormatInvalidCell(j,i);
+                    throw new NumberFormatException("Exception 1");
                 }
             }
-
+            System.out.println();
+            System.out.println("1" + Arrays.toString(seen));
             seen = new boolean[10];  // Reset for column check
             for (int j = 0; j < 9; j++) {
                 if (!validate.validateCell(sudokuFields[j][i], seen)) {
-                    valid = false;
                     FormatInvalidCell(j,i);
+                    throw new NumberFormatException("Exception 2");
                 }
             }
+            System.out.println();
+            System.out.println("2" + Arrays.toString(seen));
         }
 
         // Check 3x3 sub-grids
@@ -112,19 +118,18 @@ public class SudokuHelper {
                         int y = blockCol * 3 + col;
                         try {
                             if (!validate.validateCell(sudokuFields[x][y], seen)) {
-                                valid = false;
                                 FormatInvalidCell(x,y);
+                                throw new NumberFormatException("Exception 3");
                             }
                         } catch (NumberFormatException e) {
-                            valid = false;
                             FormatInvalidCell(x,y);
+                            throw new NumberFormatException("Exception 4");
                         }
                     }
                 }
+                System.out.println();
+                System.out.println("3" + Arrays.toString(seen));
             }
-        }
-        if (!valid) {
-            alert.showAndWait();
         }
     }
 
@@ -210,7 +215,12 @@ public class SudokuHelper {
 
     @FXML
     protected void onGetHelpButtonClick() {
-        validateBoard();
+        try {
+            validateBoard();
+        } catch (NumberFormatException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
+            alert.showAndWait();
+        }
         solveSudoku();
     }
 
